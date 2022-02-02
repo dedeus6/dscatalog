@@ -2,6 +2,8 @@ package com.bootcamp.dscatalog.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bootcamp.dscatalog.dto.UserDTO;
 import com.bootcamp.dscatalog.dto.UserInsertDTO;
+import com.bootcamp.dscatalog.dto.UserUpdateDTO;
 import com.bootcamp.dscatalog.services.UserService;
 
 @RestController
@@ -40,16 +43,16 @@ public class UserResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO req) {
+	public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO req) {
 		UserDTO newDto = service.insert(req);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
 		return ResponseEntity.created(uri).body(newDto);
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO req) {
-		req = service.update(id, req);
-		return ResponseEntity.ok(req);
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO req) {
+		UserDTO newDto = service.update(id, req);
+		return ResponseEntity.ok(newDto);
 	}
 	
 	@DeleteMapping(value = "/{id}")
